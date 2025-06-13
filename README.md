@@ -32,15 +32,7 @@
 
 * **maze.py** consists of all data structures and algorithms using in this project.
 * **maze_game.py** creates a pygame window showing a random maze and solutions with respect to each algorithms.
-* **Astar_running.py** creates a pygame window displaying the progress of generating a maze and solving it by A*.
 * **test.py** is the file to solve this problem for 100 different instances with size 50x50 and write the _number of explored nodes_, _running time(ms)_, _length of solution_ into 3 .csv file **node.csv**, **time.csv**, **path.csv**, repectively. 
-* **node_report.csv**, **time_report.csv**, **path_report.csv** are files that we use to analyse and make comparision in our report.
+* **node.csv**, **path.csv**, **time.csv** are files that we use to analyse and make comparision in our report.
 
-## Contributors
-* Trịnh Hoàng Giang: giang.th214893@sis.hust.edu.vn
-* Hoàng Thành Đạt: dat.ht214889@sis.hust.edu.vn
-* Lăng Văn Quý: quy.lv214928@sis.hust.edu.vn
-* Hồ Ngọc Ánh: anh.hn214877@sis.hust.edu.vn
-# MazeGamePython
-# MazeGamePython
 # MazeGamePython
