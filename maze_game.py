@@ -3,13 +3,14 @@ import sys
 import time
 from maze import *
 
-# Colors
+# Colors    # Màu cho các nút kích thước
 black=(0,0,0)
 white=(255,255,255)
 green=(0,255,0)
 red=(255,0,0)
 yellow=(255,255,153)
 blue=(0,191,255)
+light_gray=(200,200,200)
 
 # Create game
 pygame.init()
@@ -17,18 +18,20 @@ size = width, height = 800,600
 screen = pygame.display.set_mode(size)
 
 # Fonts
-
 smallFont = pygame.font.SysFont('arial', 20)
 mediumFont = pygame.font.SysFont('arial', 28)
 largeFont = pygame.font.SysFont('arial', 40)
 
 # Maze
-N=40
-M=40
+N=10  # Kích thước mặc định 10x10
+M=10
 P0=(0,0)
-P1=(39,39)
+P1=(N-1,M-1)
 matrix=[['██' for i in range(M)] for i in range(N)]
 maze=Maze(N,M,P0,P1)
+
+# Biến lưu kích thước mê cung được chọn
+selected_size = "10x10"  # Kích thước mặc định
 
 # Board size
 BOARD_PADDING = 40  # Increase padding for better spacing
@@ -48,16 +51,24 @@ board_origin = (BOARD_PADDING, (height - board_height) // 2)
 right_panel_left = board_origin[0] + board_width + 2 * BOARD_PADDING
 right_panel_width = width - right_panel_left - BOARD_PADDING
 
+# Buttons for maze size selection
+SIZE_BUTTON_HEIGHT = 30
+SIZE_BUTTON_WIDTH = 80
+SIZE_BUTTON_SPACING = 10
+size_buttons_top = BOARD_PADDING
+size_button_10x10 = pygame.Rect(right_panel_left, size_buttons_top, SIZE_BUTTON_WIDTH, SIZE_BUTTON_HEIGHT)
+size_button_20x20 = pygame.Rect(right_panel_left + SIZE_BUTTON_WIDTH + SIZE_BUTTON_SPACING, size_buttons_top, SIZE_BUTTON_WIDTH, SIZE_BUTTON_HEIGHT)
+size_button_50x50 = pygame.Rect(right_panel_left + 2 * (SIZE_BUTTON_WIDTH + SIZE_BUTTON_SPACING), size_buttons_top, SIZE_BUTTON_WIDTH, SIZE_BUTTON_HEIGHT)
+
 # Button positions (stacked vertically, centered in right panel)
-first_button_top = (height - (BUTTON_HEIGHT * 5 + BUTTON_SPACING * 4 + 120 + 20)) // 2
+first_button_top = (height - (BUTTON_HEIGHT * 4 + BUTTON_SPACING * 3 + 120 + 20)) // 2
 AstarButton = pygame.Rect(right_panel_left, first_button_top, BUTTON_WIDTH, BUTTON_HEIGHT)
 DFSButton = pygame.Rect(right_panel_left, first_button_top + (BUTTON_HEIGHT + BUTTON_SPACING), BUTTON_WIDTH, BUTTON_HEIGHT)
 BFSButton = pygame.Rect(right_panel_left, first_button_top + 2 * (BUTTON_HEIGHT + BUTTON_SPACING), BUTTON_WIDTH, BUTTON_HEIGHT)
-GreedyButton = pygame.Rect(right_panel_left, first_button_top + 3 * (BUTTON_HEIGHT + BUTTON_SPACING), BUTTON_WIDTH, BUTTON_HEIGHT)
-resetButton = pygame.Rect(right_panel_left, first_button_top + 4 * (BUTTON_HEIGHT + BUTTON_SPACING), BUTTON_WIDTH, BUTTON_HEIGHT)
+resetButton = pygame.Rect(right_panel_left, first_button_top + 3 * (BUTTON_HEIGHT + BUTTON_SPACING), BUTTON_WIDTH, BUTTON_HEIGHT)
 
 # Result box (below buttons)
-result_box_top = resetButton.bottom + 20
+result_box_top = resetButton.bottom + 30
 result_box_height = 120
 result_box_rect = pygame.Rect(right_panel_left, result_box_top, BUTTON_WIDTH, result_box_height)
 
@@ -148,6 +159,31 @@ while True:
     )
     pygame.draw.rect(screen, red, rect)
 
+    # Vẽ các nút chọn kích thước mê cung
+    # Nút 10x10
+    button_color = light_gray if selected_size == "10x10" else white
+    pygame.draw.rect(screen, button_color, size_button_10x10)
+    buttonText = smallFont.render("10x10", True, black)
+    buttonRect = buttonText.get_rect()
+    buttonRect.center = size_button_10x10.center
+    screen.blit(buttonText, buttonRect)
+
+    # Nút 20x20
+    button_color = light_gray if selected_size == "20x20" else white
+    pygame.draw.rect(screen, button_color, size_button_20x20)
+    buttonText = smallFont.render("20x20", True, black)
+    buttonRect = buttonText.get_rect()
+    buttonRect.center = size_button_20x20.center
+    screen.blit(buttonText, buttonRect)
+
+    # Nút 50x50
+    button_color = light_gray if selected_size == "50x50" else white
+    pygame.draw.rect(screen, button_color, size_button_50x50)
+    buttonText = smallFont.render("50x50", True, black)
+    buttonRect = buttonText.get_rect()
+    buttonRect.center = size_button_50x50.center
+    screen.blit(buttonText, buttonRect)
+
     # Astar button
     pygame.draw.rect(screen, white, AstarButton)
     buttonText = smallFont.render("Astar Solve", True, black)
@@ -167,13 +203,6 @@ while True:
     buttonText = smallFont.render("BFS Solve", True, black)
     buttonRect = buttonText.get_rect()
     buttonRect.center = BFSButton.center
-    screen.blit(buttonText, buttonRect)
-
-    # Greedy button
-    pygame.draw.rect(screen, white, GreedyButton)
-    buttonText = smallFont.render("Greedy Solve", True, black)
-    buttonRect = buttonText.get_rect()
-    buttonRect.center = GreedyButton.center
     screen.blit(buttonText, buttonRect)
 
     # Reset button
@@ -290,12 +319,6 @@ while True:
             buttonTextRect.center = BFSButton.center
             screen.blit(buttonText, buttonTextRect)
 
-            pygame.draw.rect(screen, white, GreedyButton)
-            buttonText = smallFont.render("Greedy Solve", True, black)
-            buttonTextRect = buttonText.get_rect()
-            buttonTextRect.center = GreedyButton.center
-            screen.blit(buttonText, buttonTextRect)
-
             pygame.draw.rect(screen, white, resetButton)
             buttonText = mediumFont.render("Reset", True, black)
             buttonTextRect = buttonText.get_rect()
@@ -317,7 +340,7 @@ while True:
             maze.solution = []
             redraw_maze_only_path()
             maze.Astar()
-            algo_results.append(f"Astar: {len(maze.solution)}")
+            algo_results.append(f"Astar: {len(maze.solution)}({len(maze.explore)})")
             animate_solution()
         # If DFS button clicked
         elif DFSButton.collidepoint(mouse):
@@ -325,7 +348,7 @@ while True:
             maze.solution = []
             redraw_maze_only_path()
             maze.DFS()
-            algo_results.append(f"DFS: {len(maze.solution)}")
+            algo_results.append(f"DFS: {len(maze.solution)}({len(maze.explore)})")
             animate_solution()
         # If BFS button clicked
         elif BFSButton.collidepoint(mouse):
@@ -333,15 +356,7 @@ while True:
             maze.solution = []
             redraw_maze_only_path()
             maze.BFS()
-            algo_results.append(f"BFS: {len(maze.solution)}")
-            animate_solution()
-        # If Greedy button clicked
-        elif GreedyButton.collidepoint(mouse):
-            maze.explore = []
-            maze.solution = []
-            redraw_maze_only_path()
-            maze.Greedy()
-            algo_results.append(f"Greedy: {len(maze.solution)}")
+            algo_results.append(f"BFS: {len(maze.solution)}({len(maze.explore)})")
             animate_solution()
         # If reset button clicked
         elif resetButton.collidepoint(mouse):
@@ -351,12 +366,83 @@ while True:
             maze.solution = []
             algo_results.clear()
             end=False
+        # Nếu nhấp vào nút kích thước 10x10
+        elif size_button_10x10.collidepoint(mouse):
+            if selected_size != "10x10":
+                selected_size = "10x10"
+                N = M = 10
+                P0 = (0, 0)
+                P1 = (N-1, M-1)
+                # Tạo mê cung mới với kích thước 10x10
+                maze = Maze(N, M, P0, P1)
+                maze.generate()
+                maze.explore = []
+                maze.solution = []
+                algo_results.clear()
+                # Tính toán lại kích thước hiển thị
+                cell_size = int(min(board_area_width / N, board_area_height / M))
+                board_width = cell_size * N
+                board_height = cell_size * M
+                board_origin = (BOARD_PADDING, (height - board_height) // 2)
+                # Cập nhật vị trí các nút bên phải
+                right_panel_left = board_origin[0] + board_width + 2 * BOARD_PADDING
+                # Cập nhật vị trí các nút kích thước
+                size_button_10x10 = pygame.Rect(right_panel_left, size_buttons_top, SIZE_BUTTON_WIDTH, SIZE_BUTTON_HEIGHT)
+                size_button_20x20 = pygame.Rect(right_panel_left + SIZE_BUTTON_WIDTH + SIZE_BUTTON_SPACING, size_buttons_top, SIZE_BUTTON_WIDTH, SIZE_BUTTON_HEIGHT)
+                size_button_50x50 = pygame.Rect(right_panel_left + 2 * (SIZE_BUTTON_WIDTH + SIZE_BUTTON_SPACING), size_buttons_top, SIZE_BUTTON_WIDTH, SIZE_BUTTON_HEIGHT)
+        # Nếu nhấp vào nút kích thước 20x20
+        elif size_button_20x20.collidepoint(mouse):
+            if selected_size != "20x20":
+                selected_size = "20x20"
+                N = M = 20
+                P0 = (0, 0)
+                P1 = (N-1, M-1)
+                # Tạo mê cung mới với kích thước 20x20
+                maze = Maze(N, M, P0, P1)
+                maze.generate()
+                maze.explore = []
+                maze.solution = []
+                algo_results.clear()
+                # Tính toán lại kích thước hiển thị
+                cell_size = int(min(board_area_width / N, board_area_height / M))
+                board_width = cell_size * N
+                board_height = cell_size * M
+                board_origin = (BOARD_PADDING, (height - board_height) // 2)
+                # Cập nhật vị trí các nút bên phải
+                right_panel_left = board_origin[0] + board_width + 2 * BOARD_PADDING
+                # Cập nhật vị trí các nút kích thước
+                size_button_10x10 = pygame.Rect(right_panel_left, size_buttons_top, SIZE_BUTTON_WIDTH, SIZE_BUTTON_HEIGHT)
+                size_button_20x20 = pygame.Rect(right_panel_left + SIZE_BUTTON_WIDTH + SIZE_BUTTON_SPACING, size_buttons_top, SIZE_BUTTON_WIDTH, SIZE_BUTTON_HEIGHT)
+                size_button_50x50 = pygame.Rect(right_panel_left + 2 * (SIZE_BUTTON_WIDTH + SIZE_BUTTON_SPACING), size_buttons_top, SIZE_BUTTON_WIDTH, SIZE_BUTTON_HEIGHT)
+        # Nếu nhấp vào nút kích thước 50x50
+        elif size_button_50x50.collidepoint(mouse):
+            if selected_size != "50x50":
+                selected_size = "50x50"
+                N = M = 50
+                P0 = (0, 0)
+                P1 = (N-1, M-1)
+                # Tạo mê cung mới với kích thước 50x50
+                maze = Maze(N, M, P0, P1)
+                maze.generate()
+                maze.explore = []
+                maze.solution = []
+                algo_results.clear()
+                # Tính toán lại kích thước hiển thị
+                cell_size = int(min(board_area_width / N, board_area_height / M))
+                board_width = cell_size * N
+                board_height = cell_size * M
+                board_origin = (BOARD_PADDING, (height - board_height) // 2)
+                # Cập nhật vị trí các nút bên phải
+                right_panel_left = board_origin[0] + board_width + 2 * BOARD_PADDING
+                # Cập nhật vị trí các nút kích thước
+                size_button_10x10 = pygame.Rect(right_panel_left, size_buttons_top, SIZE_BUTTON_WIDTH, SIZE_BUTTON_HEIGHT)
+                size_button_20x20 = pygame.Rect(right_panel_left + SIZE_BUTTON_WIDTH + SIZE_BUTTON_SPACING, size_buttons_top, SIZE_BUTTON_WIDTH, SIZE_BUTTON_HEIGHT)
+                size_button_50x50 = pygame.Rect(right_panel_left + 2 * (SIZE_BUTTON_WIDTH + SIZE_BUTTON_SPACING), size_buttons_top, SIZE_BUTTON_WIDTH, SIZE_BUTTON_HEIGHT)
         else:
             if any([
                 AstarButton.collidepoint(mouse),
                 DFSButton.collidepoint(mouse),
-                BFSButton.collidepoint(mouse),
-                GreedyButton.collidepoint(mouse)
+                BFSButton.collidepoint(mouse)
             ]):
                 end=True
 

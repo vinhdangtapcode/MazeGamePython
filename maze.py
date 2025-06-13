@@ -120,33 +120,6 @@ class Maze:
         self.maze[self.start[0]][self.start[1]]='SP'
         self.maze[self.end[0]][self.end[1]]='EP'
 
-    # Greedy Best-first Search solver
-    def Greedy(self):
-        self.explore=[]
-        self.solution=[]
-        start_node=Node(state=self.start)
-        start_node.set_parent(None)
-        fringe=dict()
-        fringe[start_node]=self.h(start_node)
-    
-        while len(fringe)!=0:
-            node=min(fringe,key=fringe.get)
-            fringe.pop(node)
-            self.explore.append(node.state)
-            if node.state==self.end:
-                while node!=None:
-                    self.solution.append(node.state)
-                    node=node.parent
-                self.solution.reverse()
-                break
-            else:
-                for state in self.neighbor(node):
-                    temp=Node(state=state)
-                    if state in self.explore or state not in self.path or temp in fringe:
-                        pass
-                    else: 
-                        fringe[temp]=self.h(temp)
-                        temp.set_parent(node)
 
     # A* Search solver
     def Astar(self):
