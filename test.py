@@ -12,11 +12,18 @@ data_node=[[] for i in range(30)]
 data_time=[[] for i in range(30)]
 
 maze=Maze(N,M,(0,0),(49,49))
-for n in range(10):  # Giảm số lần lặp xuống 10
+for n in range(10):  
     maze.generate()
 
     start_time=time.time()
     maze.Astar()
+    end_time=time.time()
+    data_path[n].append(len(maze.solution))
+    data_time[n].append(round((end_time-start_time)*1000))
+    data_node[n].append(len(maze.explore))
+
+    start_time=time.time()
+    maze.Greedy()
     end_time=time.time()
     data_path[n].append(len(maze.solution))
     data_time[n].append(round((end_time-start_time)*1000))
@@ -48,6 +55,13 @@ for n in range(10,20):  # Điều chỉnh phạm vi vòng lặp
     data_node[n].append(len(maze.explore))
 
     start_time=time.time()
+    maze.Greedy()
+    end_time=time.time()
+    data_path[n].append(len(maze.solution))
+    data_time[n].append(round((end_time-start_time)*1000))
+    data_node[n].append(len(maze.explore))
+
+    start_time=time.time()
     maze.BFS()
     end_time=time.time()
     data_path[n].append(len(maze.solution))
@@ -73,6 +87,13 @@ for n in range(20,30):  # Điều chỉnh phạm vi vòng lặp
     data_node[n].append(len(maze.explore))
 
     start_time=time.time()
+    maze.Greedy()
+    end_time=time.time()
+    data_path[n].append(len(maze.solution))
+    data_time[n].append(round((end_time-start_time)*1000))
+    data_node[n].append(len(maze.explore))
+
+    start_time=time.time()
     maze.BFS()
     end_time=time.time()
     data_path[n].append(len(maze.solution))
@@ -87,7 +108,7 @@ for n in range(20,30):  # Điều chỉnh phạm vi vòng lặp
     data_node[n].append(len(maze.explore))
 
 
-sdata=["Astar","BFS","DFS"]
+sdata=["Astar","Greedy","BFS","DFS"]
 with open('path.csv','w') as file:
     writer=csv.writer(file)
     writer.writerow(sdata)

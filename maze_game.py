@@ -55,17 +55,18 @@ right_panel_width = width - right_panel_left - BOARD_PADDING
 SIZE_BUTTON_HEIGHT = 30
 SIZE_BUTTON_WIDTH = 80
 SIZE_BUTTON_SPACING = 10
-size_buttons_top = BOARD_PADDING
+size_buttons_top = BOARD_PADDING - 20  # Moved 10 pixels higher
 size_button_10x10 = pygame.Rect(right_panel_left, size_buttons_top, SIZE_BUTTON_WIDTH, SIZE_BUTTON_HEIGHT)
 size_button_20x20 = pygame.Rect(right_panel_left + SIZE_BUTTON_WIDTH + SIZE_BUTTON_SPACING, size_buttons_top, SIZE_BUTTON_WIDTH, SIZE_BUTTON_HEIGHT)
 size_button_50x50 = pygame.Rect(right_panel_left + 2 * (SIZE_BUTTON_WIDTH + SIZE_BUTTON_SPACING), size_buttons_top, SIZE_BUTTON_WIDTH, SIZE_BUTTON_HEIGHT)
 
 # Button positions (stacked vertically, centered in right panel)
-first_button_top = (height - (BUTTON_HEIGHT * 4 + BUTTON_SPACING * 3 + 120 + 20)) // 2
+first_button_top = (height - (BUTTON_HEIGHT * 5 + BUTTON_SPACING * 4 + 120 + 20)) // 2
 AstarButton = pygame.Rect(right_panel_left, first_button_top, BUTTON_WIDTH, BUTTON_HEIGHT)
-DFSButton = pygame.Rect(right_panel_left, first_button_top + (BUTTON_HEIGHT + BUTTON_SPACING), BUTTON_WIDTH, BUTTON_HEIGHT)
-BFSButton = pygame.Rect(right_panel_left, first_button_top + 2 * (BUTTON_HEIGHT + BUTTON_SPACING), BUTTON_WIDTH, BUTTON_HEIGHT)
-resetButton = pygame.Rect(right_panel_left, first_button_top + 3 * (BUTTON_HEIGHT + BUTTON_SPACING), BUTTON_WIDTH, BUTTON_HEIGHT)
+GreedyButton = pygame.Rect(right_panel_left, first_button_top + (BUTTON_HEIGHT + BUTTON_SPACING), BUTTON_WIDTH, BUTTON_HEIGHT)
+DFSButton = pygame.Rect(right_panel_left, first_button_top + 2 * (BUTTON_HEIGHT + BUTTON_SPACING), BUTTON_WIDTH, BUTTON_HEIGHT)
+BFSButton = pygame.Rect(right_panel_left, first_button_top + 3 * (BUTTON_HEIGHT + BUTTON_SPACING), BUTTON_WIDTH, BUTTON_HEIGHT)
+resetButton = pygame.Rect(right_panel_left, first_button_top + 4 * (BUTTON_HEIGHT + BUTTON_SPACING), BUTTON_WIDTH, BUTTON_HEIGHT)
 
 # Result box (below buttons)
 result_box_top = resetButton.bottom + 30
@@ -191,6 +192,13 @@ while True:
     buttonRect.center = AstarButton.center
     screen.blit(buttonText, buttonRect)
 
+    # Greedy button
+    pygame.draw.rect(screen, white, GreedyButton)
+    buttonText = smallFont.render("Greedy Solve", True, black)
+    buttonRect = buttonText.get_rect()
+    buttonRect.center = GreedyButton.center
+    screen.blit(buttonText, buttonRect)
+
     # DFS button
     pygame.draw.rect(screen, white, DFSButton)
     buttonText = smallFont.render("DFS Solve", True, black)
@@ -307,6 +315,12 @@ while True:
             buttonTextRect.center = AstarButton.center
             screen.blit(buttonText, buttonTextRect)
 
+            pygame.draw.rect(screen, white, GreedyButton)
+            buttonText = smallFont.render("Greedy Solve", True, black)
+            buttonTextRect = buttonText.get_rect()
+            buttonTextRect.center = GreedyButton.center
+            screen.blit(buttonText, buttonTextRect)
+
             pygame.draw.rect(screen, white, DFSButton)
             buttonText = smallFont.render("DFS Solve", True, black)
             buttonTextRect = buttonText.get_rect()
@@ -341,6 +355,14 @@ while True:
             redraw_maze_only_path()
             maze.Astar()
             algo_results.append(f"Astar: {len(maze.solution)}({len(maze.explore)})")
+            animate_solution()
+        # If Greedy button clicked
+        elif GreedyButton.collidepoint(mouse):
+            maze.explore = []
+            maze.solution = []
+            redraw_maze_only_path()
+            maze.Greedy()
+            algo_results.append(f"Greedy: {len(maze.solution)}({len(maze.explore)})")
             animate_solution()
         # If DFS button clicked
         elif DFSButton.collidepoint(mouse):
@@ -441,6 +463,7 @@ while True:
         else:
             if any([
                 AstarButton.collidepoint(mouse),
+                GreedyButton.collidepoint(mouse),
                 DFSButton.collidepoint(mouse),
                 BFSButton.collidepoint(mouse)
             ]):

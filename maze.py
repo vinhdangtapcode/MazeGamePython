@@ -162,6 +162,11 @@ class Maze:
                         fringe[temp]=self.f(temp)
                         g_score[temp]=g_score.get(node)+1
 
+
+
+
+
+
     # Breadth First Search solver
     def BFS(self):
         self.explore=[]
@@ -212,7 +217,43 @@ class Maze:
                         child.set_parent(node)
                         fringe.push(child)
 
-    # Remove some walls to make the maze more complicated   
+    # Greedy Best-First Search solver
+    def Greedy(self):
+        self.explore = []
+        self.solution = []
+        start_node = Node(state=self.start)
+        start_node.set_parent(None)
+        fringe = dict()
+        fringe[start_node] = self.h(start_node)
+
+        while len(fringe) != 0:
+            node = min(fringe, key=fringe.get)
+            fringe.pop(node)
+            self.explore.append(node.state)
+
+            if node.state == self.end:
+                while node != None:
+                    self.solution.append(node.state)
+                    node = node.parent
+                self.solution.reverse()
+                break
+            else:
+                for state in self.neighbor(node):
+                    temp = Node(state=state)
+                    if state in self.explore or state not in self.path:
+                        pass
+                    elif temp in fringe:
+                        # Only update if the new heuristic is better
+                        new_h = self.h(temp)
+                        if new_h < fringe[temp]:
+                            fringe.pop(temp)
+                            fringe[temp] = new_h
+                            temp.set_parent(node)
+                    else:
+                        temp.set_parent(node)
+                        fringe[temp] = self.h(temp)
+
+    # Remove some walls to make the maze more complicated
     def make_complex(self):
         ran_num=random.randint(0,len(self.wall)//10)
         for i in range(ran_num):
@@ -220,18 +261,3 @@ class Maze:
             self.wall.remove(remove)
             self.path.append(remove)
 
-    # Print the maze
-    def printMaze(self):
-        for x in range(self.width):
-            for y in range(self.height):
-                if (x,y) == self.start:
-                    print("SP", end='')
-                elif (x,y) == self.end:
-                    print("EP", end='')
-                elif (x,y) in self.solution:
-                    print("**", end='')
-                elif (x,y) in self.explore:
-                    print("==", end='')
-                else:
-                    print(self.maze[x][y],end='')
-            print()

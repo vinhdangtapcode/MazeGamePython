@@ -1,46 +1,67 @@
-# SOLVING MAZE BASED ON HEURISTIC SEARCH (A* SEARCH)
+# Chương Trình Giải Mê Cung (Maze Solver)
 
-## Description
+## Cách cài đặt và sử dụng
+1. Clone dự án từ GitHub:
+   ```
+   git clone https://github.com/vinhdangtapcode/MazeGamePython.git
+   cd MazeSolver
+   ```
 
-* **Initial State**: Normally we will let the starting point have coordinates (0,0) and the destination point with coordinates (M,N). We expand the problem that the initial state can be created with P0 and P1 at any coordinates on the path of the maze.
-* **Action**: From the current coordinates we can go left, right, up or down if not blocked by the wall of the maze and we cannot go diagonally.
-* **Goal Test**:  We reach the destination.
-* **Path Cost**: Each step costs 1 and the cost is uniform.
+2. Cài đặt thư viện Pygame:
+   ```
+   pip install pygame
+   ```
 
+3. Chạy chương trình:
+   ```
+   python maze_game.py
+   ```
 
-## Getting Started
+4. Sử dụng chương trình:
+   - Nhấp vào "Generate Maze" để tạo mê cung mới
+   - Chọn kích thước mê cung mong muốn (10x10, 20x20, 50x50)
+   - Nhấp vào các nút thuật toán để xem cách mỗi thuật toán giải quyết mê cung
+   - Quan sát quá trình khám phá (màu xanh dương) và đường đi cuối cùng (màu vàng)
+   - Nhấp "Reset" để tạo mê cung mới
 
-### Dependencies
-* Python
-* pygame library
+## Tổng Quan
+Đây là ứng dụng đồ họa giúp trực quan hóa và so sánh các thuật toán tìm đường trong mê cung. Người dùng có thể tạo mê cung ngẫu nhiên với nhiều kích thước khác nhau và quan sát cách các thuật toán khác nhau giải quyết vấn đề.
 
-### Installing
-1. Download this project as zip and extract it.
-2. Install **pygame** .
+## Các thuật toán được triển khai
+- **A\* (A-star)**: Thuật toán tìm đường tối ưu sử dụng hàm heuristic và chi phí đường đi, thường tìm ra đường đi ngắn nhất.
+- **Greedy (Tham lam)**: Thuật toán chỉ sử dụng hàm heuristic để ước tính khoảng cách đến đích, không xem xét chi phí đường đi.
+- **BFS (Breadth-First Search)**: Thuật toán tìm kiếm theo chiều rộng, khám phá tất cả các nút ở cùng một mức trước khi đi sâu hơn.
+- **DFS (Depth-First Search)**: Thuật toán tìm kiếm theo chiều sâu, khám phá một đường đi càng sâu càng tốt trước khi quay lại.
 
-    * Windows installation
-    ```
-    py -m pip install -U pygame --user
-    ```
+## Chức năng chính
+- Tạo mê cung ngẫu nhiên với kích thước khác nhau (10x10, 20x20, 50x50)
+- Hiển thị quá trình khám phá và giải pháp của mỗi thuật toán
+- So sánh hiệu suất giữa các thuật toán (độ dài đường đi, số lượng ô đã khám phá)
+- Lưu lại kết quả các lần chạy thuật toán để so sánh
 
-    * Mac installation
-    ```
-    python3 -m pip install -U pygame --user
-    ```
+## Giao diện người dùng
+- Nút kích thước: Để chọn kích thước mê cung (10x10, 20x20, 50x50)
+- Các nút thuật toán: A*, Greedy, DFS, BFS để chạy từng thuật toán
+- Nút Reset: Để tạo mê cung mới
+- Bảng kết quả: Hiển thị thông tin về các thuật toán đã chạy
 
-### Executing program
+## Kiểm thử hiệu suất
+File `test.py` được dùng để kiểm tra hiệu suất của các thuật toán trên nhiều mê cung khác nhau. Khi chạy file này, chương trình sẽ:
+- Tạo 30 mê cung khác nhau (cỡ 50x50) với 3 bố cục điểm bắt đầu và kết thúc khác nhau
+- Chạy cả 4 thuật toán trên mỗi mê cung
+- Ghi lại độ dài đường đi, số lượng ô khám phá và thời gian thực thi
+- Lưu kết quả vào các file CSV: path.csv, node.csv, time.csv
 
-* **maze.py** consists of all data structures and algorithms using in this project.
-* **maze_game.py** creates a pygame window showing a random maze and solutions with respect to each algorithms.
-* **Astar_running.py** creates a pygame window displaying the progress of generating a maze and solving it by A*.
-* **test.py** is the file to solve this problem for 100 different instances with size 50x50 and write the _number of explored nodes_, _running time(ms)_, _length of solution_ into 3 .csv file **node.csv**, **time.csv**, **path.csv**, repectively. 
-* **node_report.csv**, **time_report.csv**, **path_report.csv** are files that we use to analyse and make comparision in our report.
+## Cấu trúc dự án
+- `maze_game.py`: File chính chứa giao diện đồ họa và logic chương trình
+- `maze.py`: Chứa các lớp và thuật toán liên quan đến mê cung
+- `test.py`: Công cụ kiểm tra hiệu suất và tạo báo cáo
+- `*.csv`: File kết quả kiểm tra hiệu suất
 
-## Contributors
-* Trịnh Hoàng Giang: giang.th214893@sis.hust.edu.vn
-* Hoàng Thành Đạt: dat.ht214889@sis.hust.edu.vn
-* Lăng Văn Quý: quy.lv214928@sis.hust.edu.vn
-* Hồ Ngọc Ánh: anh.hn214877@sis.hust.edu.vn
-# MazeGamePython
-# MazeGamePython
-# MazeGamePython
+## Yêu cầu hệ thống
+- Python 3.x
+- Thư viện Pygame
+
+## Tài liệu tham khảo
+- AI-Intro HUST Slides
+- https://github.com/trinhhgiang/MazeSolver
